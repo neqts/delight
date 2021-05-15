@@ -66,11 +66,35 @@ window.onload = function () {
 
   submit.textContent = 'SUBMIT';
   p.innerHTML = `Enter your e-mail address so that we can notify you about the latest products and changes`;
-  document.body.style.Filter = 'blur(7px)';
   text.id = 'myText';
   text.type = 'text';
   text.classList.add('text');
   text.placeholder = 'Type your e-mail here...';
+
+  function download(filename, text) {
+    const element = document.createElement('a');
+    element.setAttribute(
+      'href',
+      'data:text/plain;charset=utf-8,' + encodeURIComponent(text)
+    );
+    element.setAttribute('download', filename);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  }
+
+  submit.addEventListener(
+    'click',
+    function () {
+      // Generate download of hello.txt file with some content
+      const text = document.getElementById('myText').value;
+      const filename = 'clients.text';
+      download(filename, text);
+    },
+    false
+  );
+
   submit.style.cssText = `
   display: inline-block;
     border:none;
@@ -107,13 +131,18 @@ height:100%;
 display:flex;
 justify-content:center;
 align-items:center;
-position:absolute;
+position:fixed;
+backdrop-filter: blur(5px);
+z-index:1000;
 
 
 `;
 
   const popUp = function () {
     block.style.display = 'none';
+    mainBlock.style.cssText = `
+    backdrop-filter: none;
+    `;
   };
 
   submit.addEventListener('click', popUp);
